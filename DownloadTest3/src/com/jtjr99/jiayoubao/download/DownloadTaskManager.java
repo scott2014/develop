@@ -61,8 +61,17 @@ public class DownloadTaskManager {
 						long size = Long.parseLong(headers[0].getValue());
 						long range = size / threadCount;
 						for (int i = 0; i < threadCount; i++) {
-							new DownloadTask(listener).execute(url,size + "",range * i + "",(range * (i + 1) - 1) + "",path,fileName);
+							DownloadTaskInfo info = new DownloadTaskInfo();
+							info.url = url;
+							info.size = size;
+							info.startPos = range * i;
+							info.endPos = range * (i + 1) - 1;
+							info.path = path;
+							info.fileName = fileName;
+							Downloader.getInstance().addTask(info);
+							//new DownloadTask(listener).execute(url,size + "",range * i + "",(range * (i + 1) - 1) + "",path,fileName);
 						}
+						Downloader.getInstance().start();
 					}
 				} catch (NumberFormatException e) {
 					// TODO Auto-generated catch block
